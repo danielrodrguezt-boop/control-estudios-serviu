@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model TipoEstudio {
+  id        Int               @id @default(autoincrement())
+  nombre    String            @unique
+  activo    Boolean           @default(true)
+  proyectos ProyectoEstudio[]
+}
+
+model ProyectoEstudio {
+  id                    Int                       @id @default(autoincrement())
+  codigoBip             String                    @unique
+  nombre                String
+  tipoEstudioId         Int
+  comuna                String
+  estado                String                    @default("EN_PREPARACION")
+  esCriticoManual       Boolean                   @default(false)
+  resolucionBases       String?
+  fechaResolucionBases  DateTime?
+  numeroEstadosPago     Int                       @default(0)
+  porcentajeGarantia    Float                     @default(5)
+  plazoGarantiaDias     Int                       @default(365)
+  observacionesGenerales String?
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+
+  tipoEstudio           TipoEstudio               @relation(fields: [tipoEstudioId], references: [id])
+  contrato              Contrato?
+  hitos                 Hito[]
+  garantia              Garantia?
+  modificaciones        ModificacionContractual[]
+  alertas               Alerta[]
+}
+
+model Contrato {
+  id                         Int             @id @default(autoincrement())
+  proyectoId                 Int             @unique
+  nombreConsultora           String
+  jefeProyecto               String
+  montoOriginal              Int
+  montoVigente               Int
+  plazoConsultorDias         Int
+  plazoRevisionServiuDias    Int
+  plazoTotalDias             Int
+  fechaInicio                DateTime
+  fechaTerminoContractual    DateTime
+  fechaTerminoVigente        DateTime
+  estadoContrato             String          @default("VIGENTE")
+  createdAt                  DateTime        @default(now())
+  updatedAt                  DateTime        @updatedAt
+
+  proyecto                   ProyectoEstudio @relation(fields: [proyectoId], references: [id], onDelete: Cascade)
+}
+
+model Hito {
+  id                       Int             @id @default(autoincrement())
+  proyectoId               Int
+  numero                   Int
+  nombre                   String
+  esFinal                  Boolean         @default(false)
+  porcentajePago           Float
+  montoProgramado          Int             @default(0)
+  fechaEntregaProgramada   DateTime
+  fechaEntregaReal         DateTime?
+  fechaObservaciones       DateTime?
+  fechaCorrecciones        DateTime?
+  fechaAprobacion          DateTime?
+  estado                   String          @default("PENDIENTE")
+  multaAplica              Boolean         @default(false)
+  montoMulta               Int             @default(0)
+  montoCobrado             Int             @default(0)
+  montoPagado              Int             @default(0)
+  createdAt                DateTime        @default(now())
+  updatedAt                DateTime        @updatedAt
+
+  proyecto                 ProyectoEstudio @relation(fields: [proyectoId], references: [id], onDelete: Cascade)
+}
+
+model Garantia {
+  id               Int             @id @default(autoincrement())
+  proyectoId       Int             @unique
+  tipo             String          @default("Fiel cumplimiento")
+  folio            String
+  monto            Int
+  fechaEmision     DateTime
+  fechaVencimiento DateTime
+  estado           String          @default("VIGENTE")
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  proyecto         ProyectoEstudio @relation(fields: [proyectoId], references: [id], onDelete: Cascade)
+}
+
+model ModificacionContractual {
+  id                               Int              @id @default(autoincrement())
+  proyectoId                       Int
+  tipo                             String
+  fecha                            DateTime
+  resolucion                       String
+  descripcion                      String
+  variacionMonto                   Int              @default(0)
+  variacionPlazoConsultorDias      Int              @default(0)
+  variacionPlazoRevisionServiuDias Int              @default(0)
+  nuevoMontoVigente                Int
+  nuevaFechaTerminoVigente         DateTime
+  createdAt                        DateTime         @default(now())
+
+  proyecto                         ProyectoEstudio  @relation(fields: [proyectoId], references: [id], onDelete: Cascade)
+}
+
+model Alerta {
+  id             Int              @id @default(autoincrement())
+  proyectoId     Int
+  tipo           String
+  severidad      String
+  mensaje        String
+  fechaDeteccion DateTime         @default(now())
+  resuelta       Boolean          @default(false)
+  fechaResolucion DateTime?
+  comentarioResolucion String?
+  createdAt      DateTime         @default(now())
+
+  proyecto       ProyectoEstudio  @relation(fields: [proyectoId], references: [id], onDelete: Cascade)
+}
+
+model Usuario {
+  id           Int      @id @default(autoincrement())
+  nombre       String
+  email        String   @unique
+  passwordHash String
+  rol          String   @default("USUARIO")
+  activo       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
