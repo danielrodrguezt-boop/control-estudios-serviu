@@ -1,6 +1,8 @@
 import { wordCarteraCritica } from "@/lib/reports/word";
 import { requireUser } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   await requireUser();
   const buffer = await wordCarteraCritica();

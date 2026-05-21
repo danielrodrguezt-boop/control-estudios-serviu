@@ -1,6 +1,8 @@
 import { wordComparativo } from "@/lib/reports/word";
 import { requireUser } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: Request) {
   await requireUser();
   const ids = new URL(request.url).searchParams.get("ids")?.split(",").map((id) => Number(id)).filter(Boolean);

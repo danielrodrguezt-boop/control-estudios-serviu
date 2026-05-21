@@ -1,6 +1,8 @@
 import { wordProyecto } from "@/lib/reports/word";
 import { requireUser } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(_: Request, { params }: { params: { id: string } }) {
   await requireUser();
   const { id } = params;

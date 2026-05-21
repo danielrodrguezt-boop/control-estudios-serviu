@@ -1,6 +1,8 @@
 import { excelAlertas } from "@/lib/reports/excel";
 import { requireUser } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   await requireUser();
   const buffer = await excelAlertas();
