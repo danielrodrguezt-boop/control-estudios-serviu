@@ -1,7 +1,10 @@
 import Link from "next/link";
+
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
+export const dynamic = "force-dynamic";
 
 export default async function BuscarPage({ searchParams }: { searchParams?: { q?: string } }) {
   const q = (searchParams?.q ?? "").trim();
@@ -49,7 +52,7 @@ export default async function BuscarPage({ searchParams }: { searchParams?: { q?
                 {p.esCriticoManual && <Badge tone="danger">Critico</Badge>}
               </div>
               <p className="text-sm text-muted-foreground">
-                {p.tipoEstudio.nombre} · {p.comuna} · {p.contrato?.nombreConsultora ?? "Sin consultora"} · Folio {p.garantia?.folio ?? "-"}
+                {p.tipoEstudio.nombre} Ã‚Â· {p.comuna} Ã‚Â· {p.contrato?.nombreConsultora ?? "Sin consultora"} Ã‚Â· Folio {p.garantia?.folio ?? "-"}
               </p>
             </Link>
           ))}

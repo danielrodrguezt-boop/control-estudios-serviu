@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import { Download, Plus } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { crearProyecto } from "@/app/actions";
@@ -22,6 +23,8 @@ import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { ProgressBar } from "@/components/progress-bar";
 import { SubmitButton } from "@/components/submit-button";
+
+export const dynamic = "force-dynamic";
 
 export default async function ProyectosPage({
   searchParams
@@ -99,20 +102,20 @@ export default async function ProyectosPage({
               {Object.entries(estadoProyectoLabel).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
             </select>
             <select name="critico" defaultValue={filtros.critico ?? ""} className="h-9 rounded-md border border-input bg-white px-2 text-sm">
-              <option value="">CrÃ­tico manual: todos</option>
-              <option value="true">SÃ­</option>
+              <option value="">CrÃƒÆ’Ã‚Â­tico manual: todos</option>
+              <option value="true">SÃƒÆ’Ã‚Â­</option>
               <option value="false">No</option>
             </select>
             {[
               ["contratoVencido", "Contrato vencido"],
-              ["garantiaVencida", "GarantÃ­a vencida"],
+              ["garantiaVencida", "GarantÃƒÆ’Ã‚Â­a vencida"],
               ["conAlertas", "Con alertas"],
               ["atrasoConsultora", "Atraso consultora"],
               ["atrasoServiu", "Atraso SERVIU"]
             ].map(([name, label]) => (
               <select key={name} name={name} defaultValue={filtros[name] ?? ""} className="h-9 rounded-md border border-input bg-white px-2 text-sm">
                 <option value="">{label}: todos</option>
-                <option value="si">SÃ­</option>
+                <option value="si">SÃƒÆ’Ã‚Â­</option>
               </select>
             ))}
             <button className="h-9 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground md:col-span-5">Aplicar filtros</button>
@@ -125,23 +128,23 @@ export default async function ProyectosPage({
           <table className="w-full min-w-[1680px] text-sm">
             <thead className="border-b border-border bg-muted text-left">
               <tr>
-                <th className="px-4 py-3">Código BIP</th>
+                <th className="px-4 py-3">CÃƒÂ³digo BIP</th>
                 <th className="px-4 py-3">Nombre</th>
                 <th className="px-4 py-3">Tipo de estudio</th>
                 <th className="px-4 py-3">Consultora</th>
                 <th className="px-4 py-3">Comuna</th>
                 <th className="px-4 py-3">Estado</th>
                 <th className="px-4 py-3">Nivel riesgo</th>
-                <th className="px-4 py-3">Avance físico</th>
+                <th className="px-4 py-3">Avance fÃƒÂ­sico</th>
                 <th className="px-4 py-3">Avance financiero</th>
-                <th className="px-4 py-3">Días restantes contrato</th>
-                <th className="px-4 py-3">Término contrato vigente</th>
-                <th className="px-4 py-3">Vencimiento garantía</th>
+                <th className="px-4 py-3">DÃƒÂ­as restantes contrato</th>
+                <th className="px-4 py-3">TÃƒÂ©rmino contrato vigente</th>
+                <th className="px-4 py-3">Vencimiento garantÃƒÂ­a</th>
                 <th className="px-4 py-3">Alerta contrato</th>
-                <th className="px-4 py-3">Alerta garantía</th>
+                <th className="px-4 py-3">Alerta garantÃƒÂ­a</th>
                 <th className="px-4 py-3">Alertas activas</th>
                 <th className="px-4 py-3">Advertencias</th>
-                <th className="px-4 py-3">Crítico manual</th>
+                <th className="px-4 py-3">CrÃƒÂ­tico manual</th>
                 <th className="px-4 py-3 text-right">Monto vigente</th>
               </tr>
             </thead>
@@ -179,7 +182,7 @@ export default async function ProyectosPage({
                     </td>
                     <td className="px-4 py-3">{alertas.length}</td>
                     <td className="px-4 py-3">{advertencias.length ? <Badge tone="warning" title={advertencias.join(" ")}>{advertencias.length}</Badge> : <Badge tone="success">0</Badge>}</td>
-                    <td className="px-4 py-3">{p.esCriticoManual ? <Badge tone="danger">Sí</Badge> : <Badge tone="muted">No</Badge>}</td>
+                    <td className="px-4 py-3">{p.esCriticoManual ? <Badge tone="danger">SÃƒÂ­</Badge> : <Badge tone="muted">No</Badge>}</td>
                     <td className="px-4 py-3 text-right">{formatCurrency(p.contrato?.montoVigente)}</td>
                   </tr>
                 );
@@ -194,7 +197,7 @@ export default async function ProyectosPage({
         <CardHeader><CardTitle>Nuevo proyecto</CardTitle></CardHeader>
         <CardContent>
           <form action={crearProyecto} className="grid gap-4 md:grid-cols-2">
-            <Field label="Código BIP"><Input name="codigoBip" required /></Field>
+            <Field label="CÃƒÂ³digo BIP"><Input name="codigoBip" required /></Field>
             <Field label="Nombre"><Input name="nombre" required /></Field>
             <Field label="Tipo de estudio">
               <Select name="tipoEstudioId" required>{tipos.map((t) => <option key={t.id} value={t.id}>{t.nombre}</option>)}</Select>
@@ -203,11 +206,11 @@ export default async function ProyectosPage({
             <Field label="Estado">
               <Select name="estado">{Object.entries(estadoProyectoLabel).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</Select>
             </Field>
-            <Field label="Resolución de bases"><Input name="resolucionBases" /></Field>
-            <Field label="Fecha resolución bases"><Input name="fechaResolucionBases" type="date" /></Field>
-            <Field label="Porcentaje garantía"><Input name="porcentajeGarantia" type="number" defaultValue={5} /></Field>
-            <Field label="Plazo garantía días"><Input name="plazoGarantiaDias" type="number" defaultValue={365} /></Field>
-            <label className="flex items-center gap-2 text-sm md:col-span-2"><input name="esCriticoManual" type="checkbox" /> Marcar como crítico manual</label>
+            <Field label="ResoluciÃƒÂ³n de bases"><Input name="resolucionBases" /></Field>
+            <Field label="Fecha resoluciÃƒÂ³n bases"><Input name="fechaResolucionBases" type="date" /></Field>
+            <Field label="Porcentaje garantÃƒÂ­a"><Input name="porcentajeGarantia" type="number" defaultValue={5} /></Field>
+            <Field label="Plazo garantÃƒÂ­a dÃƒÂ­as"><Input name="plazoGarantiaDias" type="number" defaultValue={365} /></Field>
+            <label className="flex items-center gap-2 text-sm md:col-span-2"><input name="esCriticoManual" type="checkbox" /> Marcar como crÃƒÂ­tico manual</label>
             <Field label="Observaciones generales"><Textarea name="observacionesGenerales" /></Field>
             <div className="md:col-span-2"><SubmitButton>Guardar proyecto</SubmitButton></div>
           </form>

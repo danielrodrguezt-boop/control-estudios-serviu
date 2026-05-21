@@ -1,10 +1,13 @@
 import { Download } from "lucide-react";
+
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ProgressBar } from "@/components/progress-bar";
 import { avanceFinancieroProyecto, avanceFisicoProyecto, generarAlertasCalculadas, nivelRiesgoOperativo } from "@/lib/business/rules";
 import { formatCurrency } from "@/lib/utils";
+
+export const dynamic = "force-dynamic";
 
 export default async function TiposPage() {
   const proyectos = await prisma.proyectoEstudio.findMany({ include: { tipoEstudio: true, contrato: true, garantia: true, hitos: true } });

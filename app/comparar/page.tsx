@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import { Download } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { ProgressBar } from "@/components/progress-bar";
 import { avanceFinancieroProyecto, avanceFisicoProyecto, daysUntil, estadoGarantiaCalculado, garantiaEvaluada, generarAlertasCalculadas, nivelRiesgoOperativo } from "@/lib/business/rules";
 import { formatCurrency, formatDate } from "@/lib/utils";
+
+export const dynamic = "force-dynamic";
 
 export default async function CompararPage({ searchParams }: { searchParams?: { ids?: string | string[] } }) {
   const rawIds = Array.isArray(searchParams?.ids) ? searchParams?.ids.join(",") : searchParams?.ids ?? "";
@@ -36,7 +39,7 @@ export default async function CompararPage({ searchParams }: { searchParams?: { 
             {proyectos.map((p) => (
               <label key={p.id} className="flex items-center gap-2 rounded-md border border-border p-2 text-sm">
                 <input name="ids" type="checkbox" value={p.id} defaultChecked={seleccionados.some((s) => s.id === p.id)} />
-                <span>{p.codigoBip} · {p.nombre}</span>
+                <span>{p.codigoBip} Ã‚Â· {p.nombre}</span>
               </label>
             ))}
             <button className="h-9 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground md:col-span-3">Comparar seleccionados</button>
@@ -78,7 +81,7 @@ export default async function CompararPage({ searchParams }: { searchParams?: { 
                     <td className="px-4 py-3"><Badge tone={riesgo === "ALTO" ? "danger" : riesgo === "MEDIO" ? "warning" : "success"}>{riesgo}</Badge></td>
                     <td className="px-4 py-3">{generarAlertasCalculadas(p).length}</td>
                     <td className="px-4 py-3">{p.contrato ? daysUntil(p.contrato.fechaTerminoVigente) : "-"}</td>
-                    <td className="px-4 py-3">{estadoGarantia ?? "Sin garantia"} · {formatDate(garantia?.fechaVencimiento)}</td>
+                    <td className="px-4 py-3">{estadoGarantia ?? "Sin garantia"} Ã‚Â· {formatDate(garantia?.fechaVencimiento)}</td>
                   </tr>
                 );
               })}

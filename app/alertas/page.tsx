@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +7,8 @@ import { tipoAlertaLabel } from "@/lib/labels";
 import { formatDate } from "@/lib/utils";
 import { alertKey, generarAlertasCalculadas } from "@/lib/business/rules";
 import { resolverAlerta } from "@/app/actions";
+
+export const dynamic = "force-dynamic";
 
 export default async function AlertasPage({
   searchParams
@@ -107,17 +110,17 @@ export default async function AlertasPage({
             <thead className="border-b border-border bg-muted text-left">
               <tr>
                 <th className="px-4 py-3">Proyecto</th>
-                <th className="px-4 py-3">Código BIP</th>
+                <th className="px-4 py-3">CÃƒÂ³digo BIP</th>
                 <th className="px-4 py-3">Consultora</th>
                 <th className="px-4 py-3">Comuna</th>
                 <th className="px-4 py-3">Tipo alerta</th>
                 <th className="px-4 py-3">Severidad</th>
-                <th className="px-4 py-3">Fecha detección</th>
-                <th className="px-4 py-3">Días atraso</th>
+                <th className="px-4 py-3">Fecha detecciÃƒÂ³n</th>
+                <th className="px-4 py-3">DÃƒÂ­as atraso</th>
                 <th className="px-4 py-3">Responsable</th>
                 <th className="px-4 py-3">Estado</th>
-                <th className="px-4 py-3">ResoluciÃ³n</th>
-                <th className="px-4 py-3">AcciÃ³n</th>
+                <th className="px-4 py-3">ResoluciÃƒÆ’Ã‚Â³n</th>
+                <th className="px-4 py-3">AcciÃƒÆ’Ã‚Â³n</th>
               </tr>
             </thead>
             <tbody>

@@ -1,9 +1,12 @@
 import Link from "next/link";
+
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { detectarAnomalias, estadoContratoCalculado, estadoGarantiaCalculado, garantiaEvaluada, generarAlertasCalculadas, prioridadProyecto } from "@/lib/business/rules";
 import { EstadoContrato, EstadoGarantia } from "@/lib/enums";
+
+export const dynamic = "force-dynamic";
 
 export default async function DiarioPage() {
   const proyectos = await prisma.proyectoEstudio.findMany({

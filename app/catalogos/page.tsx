@@ -1,9 +1,12 @@
 import { alternarTipoEstudio, crearTipoEstudio } from "@/app/actions";
+
 import { prisma } from "@/lib/prisma";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, Input } from "@/components/ui/field";
+
+export const dynamic = "force-dynamic";
 
 export default async function CatalogosPage() {
   const tipos = await prisma.tipoEstudio.findMany({ orderBy: { nombre: "asc" } });
@@ -11,7 +14,7 @@ export default async function CatalogosPage() {
   return (
     <div className="grid gap-6">
       <header>
-        <p className="text-sm text-muted-foreground">Catálogos configurables del MVP</p>
+        <p className="text-sm text-muted-foreground">CatÃƒÂ¡logos configurables del MVP</p>
         <h2 className="text-2xl font-bold">Tipos de estudio</h2>
       </header>
 

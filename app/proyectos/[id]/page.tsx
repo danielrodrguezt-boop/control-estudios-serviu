@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import { Download } from "lucide-react";
 import { EstadoHito } from "@/lib/enums";
 import { prisma } from "@/lib/prisma";
@@ -26,6 +27,8 @@ import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { ProgressBar } from "@/components/progress-bar";
 import { DeleteHitoButton } from "@/components/delete-hito-button";
 import { SubmitButton } from "@/components/submit-button";
+
+export const dynamic = "force-dynamic";
 
 export default async function ProyectoPage({ params }: { params: { id: string } }) {
   const proyectoId = Number(params.id);
@@ -66,11 +69,11 @@ export default async function ProyectoPage({ params }: { params: { id: string } 
           <div>
             <Link href="/proyectos" className="text-sm text-primary">Volver a proyectos</Link>
             <h2 className="mt-1 text-2xl font-bold">{proyecto.nombre}</h2>
-            <p className="text-sm text-muted-foreground">{proyecto.codigoBip} · {proyecto.comuna} · {proyecto.tipoEstudio.nombre}</p>
+            <p className="text-sm text-muted-foreground">{proyecto.codigoBip} Ã‚Â· {proyecto.comuna} Ã‚Â· {proyecto.tipoEstudio.nombre}</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Badge>{estadoProyectoLabel[proyecto.estado]}</Badge>
-            {proyecto.esCriticoManual && <Badge tone="danger">Crítico manual</Badge>}
+            {proyecto.esCriticoManual && <Badge tone="danger">CrÃƒÂ­tico manual</Badge>}
             <Badge tone={tonoRiesgo(riesgo)}>Riesgo {riesgo}</Badge>
             {estadoGarantia && <Badge tone={estadoGarantia === "VENCIDA" ? "danger" : estadoGarantia === "PROXIMA_A_VENCER" ? "warning" : "success"}>{estadoGarantiaLabel[estadoGarantia]}</Badge>}
           </div>
@@ -93,11 +96,11 @@ export default async function ProyectoPage({ params }: { params: { id: string } 
             <Metric title="Monto vigente" value={formatCurrency(proyecto.contrato?.montoVigente)} />
             <Metric title="Nivel riesgo" value={riesgo} />
             <Metric title="Alertas activas" value={String(alertas.length)} />
-            <Metric title="Días restantes contrato" value={diasRestantesContrato === null ? "-" : String(diasRestantesContrato)} />
-            <Metric title="Garantía" value={estadoGarantia ? estadoGarantiaLabel[estadoGarantia] : "-"} />
+            <Metric title="DÃƒÂ­as restantes contrato" value={diasRestantesContrato === null ? "-" : String(diasRestantesContrato)} />
+            <Metric title="GarantÃƒÂ­a" value={estadoGarantia ? estadoGarantiaLabel[estadoGarantia] : "-"} />
             <Metric title="Contrato" value={estadoContrato ? estadoContratoLabel[estadoContrato] : "-"} />
             <div className="rounded-lg border border-border bg-white p-4 md:col-span-2">
-              <p className="mb-2 text-xs text-muted-foreground">Avance físico</p>
+              <p className="mb-2 text-xs text-muted-foreground">Avance fÃƒÂ­sico</p>
               <ProgressBar value={avanceFisico} />
             </div>
             <div className="rounded-lg border border-border bg-white p-4 md:col-span-2">
@@ -113,16 +116,16 @@ export default async function ProyectoPage({ params }: { params: { id: string } 
           <CardHeader><CardTitle>General</CardTitle></CardHeader>
           <CardContent>
             <form action={actualizarGeneral.bind(null, proyecto.id)} className="grid gap-4 md:grid-cols-2">
-              <Field label="Código BIP"><Input name="codigoBip" defaultValue={proyecto.codigoBip} required /></Field>
+              <Field label="CÃƒÂ³digo BIP"><Input name="codigoBip" defaultValue={proyecto.codigoBip} required /></Field>
               <Field label="Nombre"><Input name="nombre" defaultValue={proyecto.nombre} required /></Field>
               <Field label="Tipo de estudio"><Select name="tipoEstudioId" defaultValue={proyecto.tipoEstudioId}>{tipos.map((t) => <option key={t.id} value={t.id}>{t.nombre}</option>)}</Select></Field>
               <Field label="Comuna"><Input name="comuna" defaultValue={proyecto.comuna} required /></Field>
               <Field label="Estado"><Select name="estado" defaultValue={proyecto.estado}>{Object.entries(estadoProyectoLabel).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</Select></Field>
-              <Field label="Resolución de bases"><Input name="resolucionBases" defaultValue={proyecto.resolucionBases ?? ""} /></Field>
-              <Field label="Fecha resolución bases"><Input name="fechaResolucionBases" type="date" defaultValue={dateInput(proyecto.fechaResolucionBases)} /></Field>
-              <Field label="Porcentaje garantía"><Input name="porcentajeGarantia" type="number" defaultValue={proyecto.porcentajeGarantia} /></Field>
-              <Field label="Plazo garantía días"><Input name="plazoGarantiaDias" type="number" defaultValue={proyecto.plazoGarantiaDias} /></Field>
-              <label className="flex items-center gap-2 text-sm md:col-span-2"><input name="esCriticoManual" type="checkbox" defaultChecked={proyecto.esCriticoManual} /> Proyecto crítico manual</label>
+              <Field label="ResoluciÃƒÂ³n de bases"><Input name="resolucionBases" defaultValue={proyecto.resolucionBases ?? ""} /></Field>
+              <Field label="Fecha resoluciÃƒÂ³n bases"><Input name="fechaResolucionBases" type="date" defaultValue={dateInput(proyecto.fechaResolucionBases)} /></Field>
+              <Field label="Porcentaje garantÃƒÂ­a"><Input name="porcentajeGarantia" type="number" defaultValue={proyecto.porcentajeGarantia} /></Field>
+              <Field label="Plazo garantÃƒÂ­a dÃƒÂ­as"><Input name="plazoGarantiaDias" type="number" defaultValue={proyecto.plazoGarantiaDias} /></Field>
+              <label className="flex items-center gap-2 text-sm md:col-span-2"><input name="esCriticoManual" type="checkbox" defaultChecked={proyecto.esCriticoManual} /> Proyecto crÃƒÂ­tico manual</label>
               <Field label="Observaciones generales"><Textarea name="observacionesGenerales" defaultValue={proyecto.observacionesGenerales ?? ""} /></Field>
               <div className="md:col-span-2"><SubmitButton>Guardar general</SubmitButton></div>
             </form>
@@ -139,10 +142,10 @@ export default async function ProyectoPage({ params }: { params: { id: string } 
               <Field label="Jefe/a de proyecto"><Input name="jefeProyecto" defaultValue={proyecto.contrato?.jefeProyecto ?? ""} required /></Field>
               <Field label="Monto original"><Input name="montoOriginal" type="number" defaultValue={proyecto.contrato?.montoOriginal ?? 0} required /></Field>
               <Field label="Monto vigente"><Input name="montoVigente" type="number" defaultValue={proyecto.contrato?.montoVigente ?? 0} required /></Field>
-              <Field label="Plazo consultor días"><Input name="plazoConsultorDias" type="number" defaultValue={proyecto.contrato?.plazoConsultorDias ?? 0} /></Field>
-              <Field label="Plazo revisión SERVIU días"><Input name="plazoRevisionServiuDias" type="number" defaultValue={proyecto.contrato?.plazoRevisionServiuDias ?? 0} /></Field>
+              <Field label="Plazo consultor dÃƒÂ­as"><Input name="plazoConsultorDias" type="number" defaultValue={proyecto.contrato?.plazoConsultorDias ?? 0} /></Field>
+              <Field label="Plazo revisiÃƒÂ³n SERVIU dÃƒÂ­as"><Input name="plazoRevisionServiuDias" type="number" defaultValue={proyecto.contrato?.plazoRevisionServiuDias ?? 0} /></Field>
               <Field label="Fecha inicio"><Input name="fechaInicio" type="date" defaultValue={dateInput(proyecto.contrato?.fechaInicio)} /></Field>
-              <Field label="Fecha término vigente"><Input name="fechaTerminoVigente" type="date" defaultValue={dateInput(proyecto.contrato?.fechaTerminoVigente)} /></Field>
+              <Field label="Fecha tÃƒÂ©rmino vigente"><Input name="fechaTerminoVigente" type="date" defaultValue={dateInput(proyecto.contrato?.fechaTerminoVigente)} /></Field>
               <div className="md:col-span-2"><SubmitButton>Guardar contrato</SubmitButton></div>
             </form>
           </CardContent>
@@ -159,7 +162,7 @@ export default async function ProyectoPage({ params }: { params: { id: string } 
             </div>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[1080px] text-sm">
-                <thead className="bg-muted text-left"><tr><th className="px-3 py-2">N°</th><th>Hito</th><th>%</th><th>Monto programado</th><th>Programada</th><th>Real</th><th>Aprobación</th><th>Estado</th><th>Días atraso</th><th>Pagado</th><th></th></tr></thead>
+                <thead className="bg-muted text-left"><tr><th className="px-3 py-2">NÃ‚Â°</th><th>Hito</th><th>%</th><th>Monto programado</th><th>Programada</th><th>Real</th><th>AprobaciÃƒÂ³n</th><th>Estado</th><th>DÃƒÂ­as atraso</th><th>Pagado</th><th></th></tr></thead>
                 <tbody>
                   {proyecto.hitos.map((h) => {
                     const estado = estadoHitoCalculado(h, proyecto.contrato);
@@ -189,14 +192,14 @@ export default async function ProyectoPage({ params }: { params: { id: string } 
               </table>
             </div>
             <form action={crearHito.bind(null, proyecto.id)} className="grid gap-3 md:grid-cols-4">
-              <Field label="Número"><Input name="numero" type="number" required /></Field>
+              <Field label="NÃƒÂºmero"><Input name="numero" type="number" required /></Field>
               <Field label="Nombre"><Input name="nombre" required /></Field>
               <Field label="Porcentaje pago"><Input name="porcentajePago" type="number" step="0.01" required /></Field>
               <Field label="Entrega programada"><Input name="fechaEntregaProgramada" type="date" required /></Field>
               <Field label="Entrega real"><Input name="fechaEntregaReal" type="date" /></Field>
               <Field label="Observaciones"><Input name="fechaObservaciones" type="date" /></Field>
               <Field label="Correcciones"><Input name="fechaCorrecciones" type="date" /></Field>
-              <Field label="Aprobación"><Input name="fechaAprobacion" type="date" /></Field>
+              <Field label="AprobaciÃƒÂ³n"><Input name="fechaAprobacion" type="date" /></Field>
               <Field label="Estado"><Select name="estado">{Object.entries(estadoHitoLabel).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</Select></Field>
               <Field label="Monto cobrado"><Input name="montoCobrado" type="number" defaultValue={0} /></Field>
               <Field label="Monto pagado"><Input name="montoPagado" type="number" defaultValue={0} /></Field>
@@ -213,25 +216,25 @@ export default async function ProyectoPage({ params }: { params: { id: string } 
         <Metric title="Monto vigente" value={formatCurrency(proyecto.contrato?.montoVigente)} />
         <Metric title="Programado hitos" value={formatCurrency(montoProgramado)} />
         <Metric title="Pagado" value={formatCurrency(montoPagado)} />
-        <Card><CardContent><p className="mb-2 text-xs text-muted-foreground">Avance físico</p><ProgressBar value={avanceFisico} /></CardContent></Card>
+        <Card><CardContent><p className="mb-2 text-xs text-muted-foreground">Avance fÃƒÂ­sico</p><ProgressBar value={avanceFisico} /></CardContent></Card>
         <Card><CardContent><p className="mb-2 text-xs text-muted-foreground">Avance financiero</p><ProgressBar value={avanceFinanciero} /></CardContent></Card>
       </section>
 
       <section id="garantia">
         <Card>
-          <CardHeader><CardTitle>Garantía de fiel cumplimiento</CardTitle></CardHeader>
+          <CardHeader><CardTitle>GarantÃƒÂ­a de fiel cumplimiento</CardTitle></CardHeader>
           <CardContent>
             <form action={guardarGarantia.bind(null, proyecto.id)} className="grid gap-4 md:grid-cols-2">
               <Field label="Folio"><Input name="folio" defaultValue={proyecto.garantia?.folio ?? ""} required /></Field>
               <Field label="Monto"><Input name="monto" type="number" defaultValue={proyecto.garantia?.monto ?? 0} required /></Field>
-              <Field label="Fecha emisión"><Input name="fechaEmision" type="date" defaultValue={dateInput(proyecto.garantia?.fechaEmision)} /></Field>
+              <Field label="Fecha emisiÃƒÂ³n"><Input name="fechaEmision" type="date" defaultValue={dateInput(proyecto.garantia?.fechaEmision)} /></Field>
               <Field label="Fecha vencimiento calculada">
                 <Input name="fechaVencimiento" type="date" defaultValue={dateInput(garantia?.fechaVencimiento)} readOnly={Boolean(proyecto.contrato)} />
               </Field>
               <p className="text-sm text-muted-foreground md:col-span-2">
-                La fecha de vencimiento de la garantía corresponde a la fecha término contrato vigente más {proyecto.plazoGarantiaDias} días.
+                La fecha de vencimiento de la garantÃƒÂ­a corresponde a la fecha tÃƒÂ©rmino contrato vigente mÃƒÂ¡s {proyecto.plazoGarantiaDias} dÃƒÂ­as.
               </p>
-              <div className="md:col-span-2"><SubmitButton>Guardar garantía</SubmitButton></div>
+              <div className="md:col-span-2"><SubmitButton>Guardar garantÃƒÂ­a</SubmitButton></div>
             </form>
           </CardContent>
         </Card>
@@ -244,21 +247,21 @@ export default async function ProyectoPage({ params }: { params: { id: string } 
             <div className="grid gap-2">
               {proyecto.modificaciones.map((m) => (
                 <div key={m.id} className="rounded-md border border-border p-3 text-sm">
-                  <strong>{tipoModificacionLabel[m.tipo]}</strong> · {formatDate(m.fecha)} · {m.resolucion}
+                  <strong>{tipoModificacionLabel[m.tipo]}</strong> Ã‚Â· {formatDate(m.fecha)} Ã‚Â· {m.resolucion}
                   <p className="text-muted-foreground">{m.descripcion}</p>
-                  <p>Variación monto: {formatCurrency(m.variacionMonto)} · Nuevo monto vigente: {formatCurrency(m.nuevoMontoVigente)} · Nueva fecha término: {formatDate(m.nuevaFechaTerminoVigente)}</p>
+                  <p>VariaciÃƒÂ³n monto: {formatCurrency(m.variacionMonto)} Ã‚Â· Nuevo monto vigente: {formatCurrency(m.nuevoMontoVigente)} Ã‚Â· Nueva fecha tÃƒÂ©rmino: {formatDate(m.nuevaFechaTerminoVigente)}</p>
                 </div>
               ))}
             </div>
             <form action={crearModificacion.bind(null, proyecto.id)} className="grid gap-3 md:grid-cols-3">
               <Field label="Tipo"><Select name="tipo">{Object.entries(tipoModificacionLabel).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</Select></Field>
               <Field label="Fecha"><Input name="fecha" type="date" required /></Field>
-              <Field label="Resolución"><Input name="resolucion" required /></Field>
-              <Field label="Variación monto"><Input name="variacionMonto" type="number" defaultValue={0} /></Field>
-              <Field label="Variación plazo consultor"><Input name="variacionPlazoConsultorDias" type="number" defaultValue={0} /></Field>
-              <Field label="Variación plazo revisión"><Input name="variacionPlazoRevisionServiuDias" type="number" defaultValue={0} /></Field>
-              <Field label="Descripción"><Textarea name="descripcion" required /></Field>
-              <div className="md:col-span-3"><SubmitButton disabled={!proyecto.contrato}>Registrar modificación y actualizar contrato</SubmitButton></div>
+              <Field label="ResoluciÃƒÂ³n"><Input name="resolucion" required /></Field>
+              <Field label="VariaciÃƒÂ³n monto"><Input name="variacionMonto" type="number" defaultValue={0} /></Field>
+              <Field label="VariaciÃƒÂ³n plazo consultor"><Input name="variacionPlazoConsultorDias" type="number" defaultValue={0} /></Field>
+              <Field label="VariaciÃƒÂ³n plazo revisiÃƒÂ³n"><Input name="variacionPlazoRevisionServiuDias" type="number" defaultValue={0} /></Field>
+              <Field label="DescripciÃƒÂ³n"><Textarea name="descripcion" required /></Field>
+              <div className="md:col-span-3"><SubmitButton disabled={!proyecto.contrato}>Registrar modificaciÃƒÂ³n y actualizar contrato</SubmitButton></div>
             </form>
           </CardContent>
         </Card>
@@ -296,8 +299,8 @@ export default async function ProyectoPage({ params }: { params: { id: string } 
           <CardHeader><CardTitle>Reportes</CardTitle></CardHeader>
           <CardContent className="flex flex-wrap gap-2">
             <Link href={`/api/reportes/word/proyecto/${proyecto.id}`}><Button><Download className="h-4 w-4" /> Word proyecto</Button></Link>
-            <Link href="/api/reportes/word/cartera-critica"><Button variant="outline"><Download className="h-4 w-4" /> Word cartera crítica</Button></Link>
-            <Link href="/api/reportes/word/garantias"><Button variant="outline"><Download className="h-4 w-4" /> Word garantías</Button></Link>
+            <Link href="/api/reportes/word/cartera-critica"><Button variant="outline"><Download className="h-4 w-4" /> Word cartera crÃƒÂ­tica</Button></Link>
+            <Link href="/api/reportes/word/garantias"><Button variant="outline"><Download className="h-4 w-4" /> Word garantÃƒÂ­as</Button></Link>
             <Link href="/api/reportes/excel/cartera"><Button variant="outline"><Download className="h-4 w-4" /> Excel cartera</Button></Link>
             <Link href="/api/reportes/excel/hitos"><Button variant="outline"><Download className="h-4 w-4" /> Excel hitos</Button></Link>
             <Link href="/api/reportes/excel/alertas"><Button variant="outline"><Download className="h-4 w-4" /> Excel alertas</Button></Link>
@@ -364,7 +367,7 @@ function construirHistorial(proyecto: {
     eventos.push({ fecha: proyecto.garantia.updatedAt, tipo: "Garantia recalculada", detalle: `Vencimiento ${formatDate(proyecto.garantia.fechaVencimiento)}`, usuario: "Sistema" });
   }
   proyecto.modificaciones.forEach((modificacion) => {
-    eventos.push({ fecha: modificacion.createdAt, tipo: "Modificacion contractual agregada", detalle: `${tipoModificacionLabel[modificacion.tipo] ?? modificacion.tipo} · ${modificacion.resolucion}`, usuario: "Manual" });
+    eventos.push({ fecha: modificacion.createdAt, tipo: "Modificacion contractual agregada", detalle: `${tipoModificacionLabel[modificacion.tipo] ?? modificacion.tipo} Ã‚Â· ${modificacion.resolucion}`, usuario: "Manual" });
   });
   proyecto.alertas.forEach((alerta) => {
     eventos.push({ fecha: alerta.fechaDeteccion, tipo: "Alerta generada", detalle: alerta.mensaje, usuario: "Sistema" });

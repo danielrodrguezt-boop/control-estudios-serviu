@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import type React from "react";
 import { AlertTriangle, Banknote, CheckCircle2, Download, MapPinned, Users } from "lucide-react";
 import { prisma } from "@/lib/prisma";
@@ -21,6 +22,8 @@ import {
 } from "@/lib/business/rules";
 import { EstadoContrato, EstadoGarantia, TipoAlerta } from "@/lib/enums";
 import { Button } from "@/components/ui/button";
+
+export const dynamic = "force-dynamic";
 
 type SearchParams = {
   comuna?: string;
@@ -82,16 +85,16 @@ export default async function Dashboard({ searchParams }: { searchParams?: Searc
 
   const kpisOperacion = [
     ["Total proyectos", resumenes.length],
-    ["Críticos manuales", resumenes.filter((r) => r.proyecto.esCriticoManual).length],
+    ["CrÃƒÂ­ticos manuales", resumenes.filter((r) => r.proyecto.esCriticoManual).length],
     ["Riesgo alto", resumenes.filter((r) => r.riesgo === "ALTO").length],
     ["Riesgo medio", resumenes.filter((r) => r.riesgo === "MEDIO").length],
     ["Riesgo bajo", resumenes.filter((r) => r.riesgo === "BAJO").length],
     ["Atrasos consultora", alertas.filter((a) => a.tipo === TipoAlerta.HITO_ATRASADO_CONSULTORA).length],
     ["Atrasos SERVIU", alertas.filter((a) => a.tipo === TipoAlerta.REVISION_SERVIU_ATRASADA).length],
-    ["Contratos próximos", resumenes.filter((r) => r.estadoContrato === EstadoContrato.PROXIMO_A_VENCER).length],
+    ["Contratos prÃƒÂ³ximos", resumenes.filter((r) => r.estadoContrato === EstadoContrato.PROXIMO_A_VENCER).length],
     ["Contratos vencidos", resumenes.filter((r) => r.estadoContrato === EstadoContrato.VENCIDO).length],
-    ["Garantías próximas", resumenes.filter((r) => r.estadoGarantia === EstadoGarantia.PROXIMA_A_VENCER).length],
-    ["Garantías vencidas", resumenes.filter((r) => r.estadoGarantia === EstadoGarantia.VENCIDA).length]
+    ["GarantÃƒÂ­as prÃƒÂ³ximas", resumenes.filter((r) => r.estadoGarantia === EstadoGarantia.PROXIMA_A_VENCER).length],
+    ["GarantÃƒÂ­as vencidas", resumenes.filter((r) => r.estadoGarantia === EstadoGarantia.VENCIDA).length]
   ];
 
   const porRiesgo = ["BAJO", "MEDIO", "ALTO"].map((riesgo) => ({ riesgo, total: resumenes.filter((r) => r.riesgo === riesgo).length }));
@@ -127,16 +130,16 @@ export default async function Dashboard({ searchParams }: { searchParams?: Searc
             <SelectFilter name="tipo" value={filters.tipo} all="Todos los tipos" options={tipos.map((t) => [String(t.id), t.nombre])} />
             <SelectFilter name="estado" value={filters.estado} all="Todos los estados" options={Object.entries(estadoProyectoLabel)} />
             <SelectFilter name="riesgo" value={filters.riesgo} all="Todos los riesgos" options={[["BAJO", "Bajo"], ["MEDIO", "Medio"], ["ALTO", "Alto"]]} />
-            <SelectFilter name="critico" value={filters.critico} all="Crítico sí/no" options={[["si", "Crítico"], ["no", "No crítico"]]} />
+            <SelectFilter name="critico" value={filters.critico} all="CrÃƒÂ­tico sÃƒÂ­/no" options={[["si", "CrÃƒÂ­tico"], ["no", "No crÃƒÂ­tico"]]} />
             <button className="h-9 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground md:col-span-6">Aplicar filtros</button>
           </form>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader><CardTitle>Resumen ejecutivo automático</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Resumen ejecutivo automÃƒÂ¡tico</CardTitle></CardHeader>
         <CardContent className="text-sm leading-6 text-slate-700">
-          Actualmente existen <strong>{resumenes.length}</strong> proyectos en la cartera filtrada. <strong>{resumenes.filter((r) => r.riesgo === "ALTO").length}</strong> presentan riesgo alto. {consultorasConAtrasos.length > 0 ? <><strong>{consultorasConAtrasos.length}</strong> consultoras concentran atrasos operativos. </> : "No hay consultoras con atrasos en el filtro actual. "} <strong>{resumenes.filter((r) => r.estadoGarantia === EstadoGarantia.VENCIDA).length}</strong> garantías vencieron. <strong>{contratos30Dias}</strong> contratos vencerán en los próximos 30 días.
+          Actualmente existen <strong>{resumenes.length}</strong> proyectos en la cartera filtrada. <strong>{resumenes.filter((r) => r.riesgo === "ALTO").length}</strong> presentan riesgo alto. {consultorasConAtrasos.length > 0 ? <><strong>{consultorasConAtrasos.length}</strong> consultoras concentran atrasos operativos. </> : "No hay consultoras con atrasos en el filtro actual. "} <strong>{resumenes.filter((r) => r.estadoGarantia === EstadoGarantia.VENCIDA).length}</strong> garantÃƒÂ­as vencieron. <strong>{contratos30Dias}</strong> contratos vencerÃƒÂ¡n en los prÃƒÂ³ximos 30 dÃƒÂ­as.
         </CardContent>
       </Card>
 
@@ -147,7 +150,7 @@ export default async function Dashboard({ searchParams }: { searchParams?: Searc
         <Metric title="Monto pagado" value={formatCurrency(montoPagado)} icon={<Banknote />} />
         <Metric title="Saldo pendiente" value={formatCurrency(montoVigente - montoPagado)} icon={<Banknote />} />
         <Metric title="Avance financiero promedio" value={`${avanceFinancieroPromedio}%`} icon={<CheckCircle2 />} />
-        <Metric title="Avance físico promedio" value={`${avanceFisicoPromedio}%`} icon={<CheckCircle2 />} />
+        <Metric title="Avance fÃƒÂ­sico promedio" value={`${avanceFisicoPromedio}%`} icon={<CheckCircle2 />} />
         <Metric title="Consultoras activas" value={consultorasActivas} icon={<Users />} />
         <Metric title="Comunas activas" value={comunasActivas} icon={<MapPinned />} />
         <Metric title="Proyectos con alertas" value={resumenes.filter((r) => r.alertas.length > 0).length} icon={<AlertTriangle />} />
@@ -161,7 +164,7 @@ export default async function Dashboard({ searchParams }: { searchParams?: Searc
         <Card>
           <CardHeader><CardTitle>Avance real de cartera</CardTitle></CardHeader>
           <CardContent className="grid gap-5">
-            <div><p className="mb-2 text-sm font-medium">Avance físico promedio</p><ProgressBar value={avanceFisicoPromedio} /></div>
+            <div><p className="mb-2 text-sm font-medium">Avance fÃƒÂ­sico promedio</p><ProgressBar value={avanceFisicoPromedio} /></div>
             <div><p className="mb-2 text-sm font-medium">Avance financiero promedio</p><ProgressBar value={avanceFinancieroPromedio} /></div>
           </CardContent>
         </Card>
@@ -182,11 +185,11 @@ export default async function Dashboard({ searchParams }: { searchParams?: Searc
           <CardContent><BarSimple data={embudo} dataKey="total" nameKey="estado" /></CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle>Evolución de alertas</CardTitle></CardHeader>
+          <CardHeader><CardTitle>EvoluciÃƒÂ³n de alertas</CardTitle></CardHeader>
           <CardContent>{evolucionAlertas.length ? <LineSimple data={evolucionAlertas} dataKey="total" nameKey="fecha" /> : <EmptyState text="Sin alertas para graficar." />}</CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle>Distribución territorial</CardTitle></CardHeader>
+          <CardHeader><CardTitle>DistribuciÃƒÂ³n territorial</CardTitle></CardHeader>
           <CardContent><PieSimple data={agrupar(resumenes, (r) => r.proyecto.comuna, () => 1, "comuna")} dataKey="total" nameKey="comuna" /></CardContent>
         </Card>
       </section>
@@ -202,7 +205,7 @@ export default async function Dashboard({ searchParams }: { searchParams?: Searc
           </CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle>Proyectos que requieren atención</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Proyectos que requieren atenciÃƒÂ³n</CardTitle></CardHeader>
           <CardContent className="grid gap-2">
             {proyectosPriorizados.map((r) => (
               <Link key={r.proyecto.id} href={`/proyectos/${r.proyecto.id}`} className="grid gap-1 rounded-md border border-border p-3 text-sm hover:bg-muted">
@@ -211,7 +214,7 @@ export default async function Dashboard({ searchParams }: { searchParams?: Searc
                 <p className="text-muted-foreground">{r.prioridad.accionSugerida}</p>
               </Link>
             ))}
-            {proyectosPriorizados.length === 0 && <EmptyState text="No hay proyectos que requieran atención inmediata." />}
+            {proyectosPriorizados.length === 0 && <EmptyState text="No hay proyectos que requieran atenciÃƒÂ³n inmediata." />}
           </CardContent>
         </Card>
       </section>
@@ -223,7 +226,7 @@ export default async function Dashboard({ searchParams }: { searchParams?: Searc
             <thead className="border-b border-border bg-muted text-left">
               <tr>
                 {[
-                  ["codigo", "Código BIP"], ["proyecto", "Proyecto"], ["tipo", "Tipo estudio"], ["comuna", "Comuna"], ["consultora", "Consultora"], ["estado", "Estado"], ["riesgo", "Riesgo"], ["fisico", "Avance físico"], ["financiero", "Avance financiero"], ["alertas", "Alertas"], ["dias", "Días contrato"], ["garantia", "Garantía"], ["critico", "Crítico"]
+                  ["codigo", "CÃƒÂ³digo BIP"], ["proyecto", "Proyecto"], ["tipo", "Tipo estudio"], ["comuna", "Comuna"], ["consultora", "Consultora"], ["estado", "Estado"], ["riesgo", "Riesgo"], ["fisico", "Avance fÃƒÂ­sico"], ["financiero", "Avance financiero"], ["alertas", "Alertas"], ["dias", "DÃƒÂ­as contrato"], ["garantia", "GarantÃƒÂ­a"], ["critico", "CrÃƒÂ­tico"]
                 ].map(([key, label]) => <th key={key} className="px-4 py-3"><SortLink label={label} sort={key} filters={filters} /></th>)}
               </tr>
             </thead>
@@ -242,7 +245,7 @@ export default async function Dashboard({ searchParams }: { searchParams?: Searc
                   <td className="px-4 py-3">{r.alertas.length}</td>
                   <td className="px-4 py-3">{r.proyecto.contrato ? daysUntil(r.proyecto.contrato.fechaTerminoVigente) : "-"}</td>
                   <td className="px-4 py-3">{r.estadoGarantia ? <Badge tone={tonoGarantia(r.estadoGarantia)}>{estadoGarantiaLabel[r.estadoGarantia]}</Badge> : "-"}</td>
-                  <td className="px-4 py-3">{r.proyecto.esCriticoManual ? <Badge tone="danger">Sí</Badge> : <Badge tone="muted">No</Badge>}</td>
+                  <td className="px-4 py-3">{r.proyecto.esCriticoManual ? <Badge tone="danger">SÃƒÂ­</Badge> : <Badge tone="muted">No</Badge>}</td>
                 </tr>
               ))}
             </tbody>

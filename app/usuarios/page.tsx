@@ -1,10 +1,13 @@
 import { alternarUsuarioAction, cambiarPasswordUsuarioAction, crearUsuarioAction } from "@/app/auth-actions";
+
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Field, Input, Select } from "@/components/ui/field";
 import { SubmitButton } from "@/components/submit-button";
+
+export const dynamic = "force-dynamic";
 
 export default async function UsuariosPage() {
   await requireAdmin();
