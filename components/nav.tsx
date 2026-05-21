@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { AlertTriangle, BarChart3, FolderKanban, GitCompare, LayoutList, Search, Settings, Users } from "lucide-react";
-import { logoutAction } from "@/app/auth-actions";
-import type { UsuarioSesion } from "@/lib/auth";
+
+type UsuarioSesion = {
+  id: number;
+  nombre: string;
+  email: string;
+  rol: string;
+};
 
 const items = [
   { href: "/", label: "Dashboard", icon: BarChart3 },
@@ -37,7 +42,7 @@ export function Nav({ user }: { user: UsuarioSesion }) {
         <p className="font-medium">{user.nombre}</p>
         <p className="text-xs text-muted-foreground">{user.email}</p>
         <p className="mt-1 text-xs text-muted-foreground">Rol {user.rol}</p>
-        <form action={logoutAction} className="mt-3">
+        <form action="/api/auth/logout" method="post" className="mt-3">
           <button className="h-8 w-full rounded-md border border-border text-xs font-medium hover:bg-muted">Cerrar sesion</button>
         </form>
       </div>
